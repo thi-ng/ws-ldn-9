@@ -7,6 +7,7 @@
    [ex04.router :as router]
    [ex04.home :as home]
    [ex04.users :as users]
+   [ex04.canvas :as canvas]
    [reagent.core :as reagent]))
 
 (enable-console-print!)
@@ -18,7 +19,10 @@
     :component #'home/home}
    {:id        :user-profile
     :match     ["users" :id]
-    :component #'users/profile}])
+    :component #'users/profile}
+   {:id        :canvas
+    :match     ["canvas"]
+    :component #'canvas/canvas}])
 
 (defn view-wrapper
   "Shared component wrapper for all routes, includes navbar."
