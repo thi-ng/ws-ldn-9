@@ -30,8 +30,7 @@
 
 (defn nav-change
   [route]
-  (set-state! :curr-route route)
-  (set-state! :nav-open? false))
+  (set-state! :curr-route route))
 
 (defn init-app
   []

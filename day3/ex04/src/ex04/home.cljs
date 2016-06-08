@@ -3,4 +3,4 @@
 (defn home
   [route]
   [:div
-   [:h1 "Hello ClojureScript"]])
+   [:h1 "Hello Wednesday!"]])

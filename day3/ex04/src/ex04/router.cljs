@@ -11,7 +11,8 @@
   (:import
    [goog.history Html5History]))
 
-(defonce history (doto (Html5History.) (.setUseFragment true)))
+(defonce history
+  (doto (Html5History.) (.setUseFragment true)))
 
 (defn route-for-id
   "Takes vector of routes and route id to find, returns route spec."

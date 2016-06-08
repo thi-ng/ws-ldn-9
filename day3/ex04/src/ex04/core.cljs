@@ -6,6 +6,7 @@
    [ex04.state :as state]
    [ex04.router :as router]
    [ex04.home :as home]
+   [ex04.users :as users]
    [reagent.core :as reagent]))
 
 (enable-console-print!)
@@ -14,8 +15,10 @@
   "Basic SPA route configuration. See router ns for further options."
   [{:id        :home
     :match     ["home"]
-    :component #'home/home
-    :label     "Home"}])
+    :component #'home/home}
+   {:id        :user-profile
+    :match     ["users" :id]
+    :component #'users/profile}])
 
 (defn view-wrapper
   "Shared component wrapper for all routes, includes navbar."
@@ -28,7 +31,7 @@
   []
   (let [route (reaction (:curr-route @state/app))]
     (fn []
-      (if (and @route)
+      (if @route
         [view-wrapper route]
         [:div "initializing..."]))))
 
@@ -49,7 +52,13 @@
   (when-not (:inited @state/app)
     (state/init-app))
   (start-router)
-  (reagent/render-component [app-component] (.getElementById js/document "app")))
+  (reagent/render-component
+   [app-component]
+   (.getElementById js/document "app")))
+
+;; document.getElementById("app")
+;; document.body
+;;
 
 (defn on-js-reload
   "Called each time fighweel has reloaded code."
