@@ -59,7 +59,9 @@
           (fn [i {:keys [id name] :as u}]
             [:tr {:key (str "user" i)}
              [:td id]
-             [:td [:a {:href (router/format-route rspec u)} name]]])
+             [:td [:a {:href     (router/format-route rspec u)
+                       :on-click router/virtual-link}
+                   name]]])
           (sort-by :name @users))]]
        [add-user-form]])))
 

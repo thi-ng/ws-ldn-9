@@ -27,8 +27,7 @@
         (reduce
          (fn [acc x] (conj acc (if (keyword? x) (params x) x)))
          [])
-        (str/join "/")
-        (str (if use-fragment? "#"))))
+        (str/join "/")))
 
 (defn format-route-for-id
   "Composition of route-for-id and format-route."
@@ -127,5 +126,5 @@
 
 (defn virtual-link
   "Helper :on-click handler for internal SPA links. Calls
-  preventDefault on event and calls trigger with given URI path."
-  [uri] (fn [e] (.preventDefault e) (trigger! uri)))
+  preventDefault on event and calls trigger with target's href value."
+  [e] (.preventDefault e) (trigger! (-> e .-target (.getAttribute "href"))))

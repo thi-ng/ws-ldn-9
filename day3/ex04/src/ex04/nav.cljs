@@ -11,6 +11,7 @@
         (map-indexed
          (fn [i {:keys [label] :as route}]
            [:a {:key (str "nav" i)
-                :href (router/format-route route {})}
+                :href (router/format-route route {})
+                :on-click router/virtual-link}
             label])))])
 
