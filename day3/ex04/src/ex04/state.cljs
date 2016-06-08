@@ -3,6 +3,7 @@
    [reagent.ratom :refer [reaction]]
    [cljs-log.core :refer [debug info warn]])
   (:require
+   [thi.ng.strf.core :as f]
    [reagent.core :as reagent]))
 
 (defonce app (reagent/atom {}))
@@ -32,7 +33,21 @@
   [route]
   (set-state! :curr-route route))
 
+(defn add-user
+  [id name]
+  (update-state! :users conj {:id (f/parse-int id 10) :name name}))
+
+(defn user-for-id
+  [id]
+  (some #(if (= id (:id %)) %) (:users @app)))
+
 (defn init-app
-  []
+  [routes]
   (swap! app merge
-         {:inited true}))
+         {:inited true
+          :routes routes
+          :users  [{:id 128 :name "Gary"}
+                   {:id 123 :name "Adrian"}
+                   {:id 512 :name "Michael"}
+                   {:id 456 :name "Cameron"}
+                   {:id 384 :name "Karsten"}]}))

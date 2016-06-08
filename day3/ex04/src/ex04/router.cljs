@@ -11,8 +11,10 @@
   (:import
    [goog.history Html5History]))
 
+(defonce use-fragment? true)
+
 (defonce history
-  (doto (Html5History.) (.setUseFragment true)))
+  (doto (Html5History.) (.setUseFragment use-fragment?)))
 
 (defn route-for-id
   "Takes vector of routes and route id to find, returns route spec."
@@ -25,12 +27,13 @@
         (reduce
          (fn [acc x] (conj acc (if (keyword? x) (params x) x)))
          [])
-        (str/join "/")))
+        (str/join "/")
+        (str (if use-fragment? "#"))))
 
 (defn format-route-for-id
   "Composition of route-for-id and format-route."
   [routes id args]
-  (if-let [route (some #(if (= id (:id %)) %) routes)]
+  (if-let [route (route-for-id routes id)]
     (format-route route args)))
 
 ;; Private helper fns
@@ -60,7 +63,7 @@
 (defn- validate-route-params
   [specs params]
   (if-let [params (coerce-route-params specs params)]
-    (let [valspecs (filter #(comp :validate val) specs)]
+    (let [valspecs (filter #(:validate (val %)) specs)]
       (if (seq valspecs)
         (let [[params err] (->> valspecs
                                 (reduce #(assoc % (key %2) (:validate (val %2))) {})

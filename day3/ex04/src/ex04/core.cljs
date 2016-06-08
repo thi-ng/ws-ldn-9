@@ -5,10 +5,13 @@
   (:require
    [ex04.state :as state]
    [ex04.router :as router]
+   [ex04.nav :as nav]
    [ex04.home :as home]
    [ex04.users :as users]
    [ex04.canvas :as canvas]
-   [reagent.core :as reagent]))
+   [reagent.core :as reagent]
+   [thi.ng.strf.core :as f]
+   [thi.ng.validate.core :as v]))
 
 (enable-console-print!)
 
@@ -16,19 +19,33 @@
   "Basic SPA route configuration. See router ns for further options."
   [{:id        :home
     :match     ["home"]
-    :component #'home/home}
+    :component #'home/home
+    :label     "Home"
+    :nav?      true}
+   {:id        :user-list
+    :match     ["users"]
+    :component #'users/user-list
+    :label     "Users"
+    :nav?      true}
    {:id        :user-profile
     :match     ["users" :id]
-    :component #'users/profile}
+    :validate  {:id {:coerce   #(f/parse-int % 10)
+                     :validate [(v/optional (v/number))]}}
+    :component #'users/profile
+    :label     "User profile"}
    {:id        :canvas
     :match     ["canvas"]
-    :component #'canvas/canvas}])
+    :component #'canvas/canvas
+    :label     "Epileptic drawing tool"
+    :nav?      true}])
 
 (defn view-wrapper
   "Shared component wrapper for all routes, includes navbar."
   [route]
   (let [route @route]
-    [(:component route) route]))
+    [:div
+     [nav/nav-bar routes route]
+     [(:component route) route]]))
 
 (defn app-component
   "Application main component."
@@ -54,7 +71,7 @@
   React component lifecycle."
   []
   (when-not (:inited @state/app)
-    (state/init-app))
+    (state/init-app routes))
   (start-router)
   (reagent/render-component
    [app-component]
